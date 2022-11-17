@@ -8,7 +8,7 @@ const { cacheProduct, clearCacheProductDetail } = require('../middlewares/redis'
 router
   // .get('/cari', searching)
   .get('/', getAllProduct)
-  .get('/:id', cacheProduct, getProduct)
+  .get('/:id',getProduct)
   .post('/', upload, insertProduct)
   .put('/:id',  upload, updateProduct)
   .delete('/:id', clearCacheProductDetail, deleteProduct)
