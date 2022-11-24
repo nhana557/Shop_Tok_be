@@ -35,7 +35,7 @@ app.use((err,req,res,next)=>{
 
 
 const PORT = process.env.PORT || 5000
-const DB_HOST = process.env.DB_HOST
+const DB_HOST = process.env.DB_HOS || 'localhost'
 app.listen(PORT, () => {
   console.log(`server running on http://${DB_HOST}:${PORT}`)
 })

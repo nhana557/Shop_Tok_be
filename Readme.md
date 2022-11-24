@@ -42,3 +42,27 @@
 ## Debug
 
 - npm run lint
+
+### Executing program
+
+- Run program with `npm run dev` for development and `npm run start` for production
+
+## Endpoint List
+
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://api.postman.com/collections/22695982-8c66b1f9-4d9b-4032-881b-a3863654e195?access_key=PMAT-01GJMKHP57X9THTTNKXWJB4MP3)
+
+<!-- RELATED PROJECT -->
+
+## Related Project
+
+- [Shop id FE](https://github.com/nhana557/Shop_Tok_FE)
+- [Shop id Demo](https://shop-tok-fe.vercel.app/)
+
+## Authors
+
+Contributors names and contact info:
+
+1. Taryana
+
+- [Linkedin](https://www.linkedin.com/in/taryana10/)
+
