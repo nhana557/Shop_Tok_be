@@ -10,7 +10,9 @@ const Router = require('./src/routes/index');
 
 app.use(express.urlencoded({extended: true}))
 app.use(express.json())
-app.use(cors())
+app.use(cors({
+  origin: "*"
+}))
 app.use(helmet())
 app.use(morgan('dev'))
 

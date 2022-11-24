@@ -1,5 +1,5 @@
 const createError = require('http-errors')
-const {selectAll, select, countData, findId, insert, update, deleteData, searching} = require('../models/category')
+const {selectAll, select, countData, findId, insert, update, deleteData, AllCategory} = require('../models/category')
 const commonHelper = require('../helper/common')
 const categoryController = {  
 
@@ -8,12 +8,17 @@ const categoryController = {
       const page = Number(req.query.page) || 1
       const limit = Number(req.query.limit) || 5
       const offset = (page - 1) * limit
-      const sortby = req.query.sortby || 'name'
+      const sortby = req.query.sortby || 'category.name'
       const sort = req.query.sort || "asc"
       const search = req.query.search;
       let querySearch = '';
       if (search) {
-          querySearch =  `where name ILIKE '%${search}%'` ;
+          querySearch =  `LEFT JOIN category on product.id_category = category.id 
+          LEFT JOIN toko ON product.id_toko = toko.id
+          where category.name ILIKE '%${search}%'` ;
+      }else{
+        querySearch = `LEFT JOIN category on product.id_category = category.id 
+        LEFT JOIN toko ON product.id_toko = toko.id`
       }
       const result = await selectAll({
         limit,
@@ -36,8 +41,15 @@ const categoryController = {
       console.log(error);
     }
   },
+  getAll : (req, res, next) =>{
+    AllCategory()
+    .then(result =>{
+      commonHelper.response(res, result.rows, 200, 'get All category')
+    })
+    .catch(err => res.send(err))
+  },
   getCategory: (req, res, next) => {
-    const id = Number(req.params.id)
+    const id = req.params.id
     select(id)
       .then(
         result => {

@@ -12,6 +12,7 @@ const protect =(req, res, next)=>{
 
       next()
     }else{
+      console.log("stop")
       res.json({
             message : "server need token"
         })

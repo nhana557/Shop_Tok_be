@@ -18,9 +18,14 @@ const productController = {
       const sort = req.query.sort || "ASC"
       const {rows: [count]} = await countData()
       const search = req.query.search;
-      let querySearch = '';
+      let querySearch;
       if (search) {
-          querySearch =  `where name ILIKE '%${search}%'` ;
+          querySearch =  `LEFT JOIN category on product.id_category = category.id 
+          LEFT JOIN toko ON product.id_toko = toko.id
+          where product.name ILIKE '%${search}%'` ;
+      }else if(search === undefined || search === '') {
+        querySearch = `LEFT JOIN category on product.id_category = category.id 
+        LEFT JOIN toko ON product.id_toko = toko.id`
       }
       // const cari = querySearch.toLowerCase();
 
@@ -52,7 +57,7 @@ const productController = {
   //       .catch(err => res.send(err));
   // },
   getProduct: (req, res) => {
-    const id = Number(req.params.id)
+    const id = req.params.id
     select(id)
       .then(
         result => {
@@ -73,9 +78,8 @@ const productController = {
       await deleteFile(file.path)
       urls.push(result)
     }
-    const { name, stock, price, merk, description, category_id, transaksi_id} = req.body
-    const {rows: [count]} = await countData()
-    const id = Number(count.count) + 1;
+    const { name, stock, price, merk, description, id_category, id_toko, condition } = req.body;
+    const id = uuid4()
 
     const data ={
       id,
@@ -84,13 +88,14 @@ const productController = {
       stock,
       price,
       merk,
-      category_id,
-      transaksi_id,
+      condition,
+      id_category,
+      id_toko,
       photo: urls.map((url) => `https://drive.google.com/thumbnail?id=${url.id}&sz=s1080`)
     }
     insert(data)
       .then(
-        result => commonHelper.response(res, result.rows, 201, "Product created")
+        result => commonHelper.response(res, data, 201, "Product created")
       )
       .catch(err => {
         console.log(err)
@@ -101,9 +106,10 @@ const productController = {
   updateProduct: async(req, res) => {
     try{
       const id = req.params.id
+      console.log(id)
       const { rowCount, rows } = await findId(id)
       console.log(rows[0].photo)
-      const { name, stock, price, category_id, merk, transaksi_id, description } = req.body
+      const { name, stock, price, id_category, merk, id_toko, description } = req.body
       const urls = [];
       const files = req.files.image
       let img;
@@ -113,7 +119,7 @@ const productController = {
       if(files){
         if(rows.photo){
           for(let img of rows.photo){
-            let id_drive = img.split('id=')[1]
+            let id_drive = img.split('id=')[1].split('&sz')[0]
             console.log("ini photo", img)
             await deleteDrive(id_drive)
             // let link_drive = img.split('id=')[1]
@@ -136,13 +142,13 @@ const productController = {
         stock,
         price,
         merk,
-        category_id,
-        transaksi_id,
+        id_category,
+        id_toko,
         photo: urls.map(url => `https://drive.google.com/thumbnail?id=${url.id}&sz=s1080` ) 
       }
       update(data)
         .then(
-          result => commonHelper.response(res, result.rows, 200, "Product updated")
+          result => commonHelper.response(res, data, 200, "Product updated")
           )
           .catch(err => res.send(err)
           )
@@ -152,7 +158,7 @@ const productController = {
   },
   deleteProduct: async(req, res, next) => {
     try{
-      const id = Number(req.params.id)
+      const id = req.params.id;
       const {rowCount, rows} = await findId(id)
       if(!rowCount){
         return next(createError(403,"ID is Not Found"))
@@ -163,9 +169,9 @@ const productController = {
       //   }
       // }
       for(let img of rows[0].photo){
-        let link_drive = img.split('id=')[1]
-        let id_drive = link_drive.split("&sz")[0]
-        await deleteDrive(id_drive)
+        let link_drive = img.split('id=')[1].split("&sz")[0]
+        console.log(link_drive)
+        await deleteDrive(link_drive)
       }
       deleteData(id)
         .then(

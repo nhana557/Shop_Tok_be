@@ -30,15 +30,10 @@ const multerUpload = multer({
       ) {
         cb(null, true);
       } else {
-        cb({ message: 'Photo extension only can .jpg, .jpeg, and .png' }, false);
+        cb({ message: 'extension file only can .jpg, .jpeg, and .png' }, false);
       }
     } else {
-      // filter mimetype
-      if (file.mimetype === 'video/mp4' || file.mimetype === 'video/3gpp') {
-        cb(null, true);
-      } else {
-        cb({ message: 'Video extension only can .mp4 or .3gp' }, false);
-      }
+      cb({ message: 'extension file only can .jpg, .jpeg, and .png' }, false);
     }
   },
   limits: { fileSize: 50000000 },
@@ -49,7 +44,7 @@ module.exports = (req, res, next) => {
   const multerFields = multerUpload.fields([
     {
       name: 'image',
-      maxCount: 4,
+      maxCount: 5,
     }
   ]);
   multerFields(req, res, (err) => {

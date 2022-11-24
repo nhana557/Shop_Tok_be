@@ -66,7 +66,8 @@ const uploadGoogleDriveProduct = async(file) =>{
             requestBody: {
                 name: file.filename,
                 mimeType: file.mimeType,
-                parents: ['1o-FdBmJ30UZ-apwoutsGR4_gW1FIGPBU']
+                parents: ['1QO-waprZAe4SODG5OlANNzhwCy9vIxtb']
+                // parents: ['1o-FdBmJ30UZ-apwoutsGR4_gW1FIGPBU']
             },
             media: {
                 mimeType: file.mimeType,

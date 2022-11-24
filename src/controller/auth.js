@@ -8,6 +8,7 @@ const { findEmail, create, selectAllUsers, activateEmail, findByToken, updateImg
 const commonHelper = require('../helper/common');
 const authHelper = require('../helper/auth');
 const sendEmail = require('../utils/email/sendEmail');
+const modelStore = require("../models/store")
 const deleteFile = require('../utils/delete')
 const { uploadGoogleDrive } = require("../utils/uploadGoogleDrive")
 const deleteDrive = require("../utils/deleteDrive")
@@ -15,12 +16,13 @@ const deleteDrive = require("../utils/deleteDrive")
 const UserController = {
   register: async (req, res, next) => {
     try {
-      const { email, password, fullname, role } = req.body;
+      const { email, password, fullname, role, StoreName } = req.body;
       const { rowCount } = await findEmail(email)
       const salt = bcrypt.genSaltSync(10)
       const passwordHash = bcrypt.hashSync(password, salt);
       const id = uuidv4()
-      const token = crypto.randomBytes(30).toString('hex')
+      // const token = crypto.randomBytes(30).toString('hex')
+      const token = true
 
       if (rowCount) {
         return next(createError(403, "Email is already used"))
@@ -32,8 +34,21 @@ const UserController = {
         fullname,
         role: role || 'buyer',
         verify: token,
-        id_toko: role === 'seller' ? id : null
       }
+      if(data.role === 'seller'){
+        console.log('test')
+        const dataStore ={
+          id: uuidv4(),
+          name: StoreName,
+          email,
+          user_id: id,
+          description: null,
+          phonenumber: null
+        }
+        await modelStore.insert(dataStore)
+
+      }
+
       await create(data)
       sendEmail({ email, fullname, token })
       commonHelper.response(res, null, 201, "Success register please check Email to activate account", null)
@@ -96,8 +111,8 @@ const UserController = {
 
         commonHelper.response(res, user, 201, 'login is success')
       }
+      if(user.verify !== 'true') return commonHelper.response(res, null, 403, 'please activation Account!')
 
-      return commonHelper.response(res, null, 403, 'please activation Account!')
     } catch (error) {
       console.log(error);
     }

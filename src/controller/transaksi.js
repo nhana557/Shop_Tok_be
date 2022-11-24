@@ -55,7 +55,6 @@ const transakasiController = {
     update: (req, res) =>{
       const id = req.params.id;
       const { transaksi_status, shipping_price, total_price, id_user, id_product, quantity, paymen } = req.body;
-
       const data = {
         id,
         transaksi_status, 

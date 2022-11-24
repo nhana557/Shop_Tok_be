@@ -4,15 +4,20 @@ const Routes = express.Router()
 const products = require('./products')
 const category = require('./category')
 const payment = require('./payment')
+const toko = require('./toko')
 const transaksi = require('./transaksi')
-const transaksi_detail = require('./transaksi_detail')
+const cart = require('./cart')
 const user = require('./auth')
+const address = require('./address.route')
+
 
 Routes
     .use('/products', products)
     .use('/category', category)
-    // .use('/payment', payment)
+    .use('/payment', payment)
+    .use('/toko', toko)
     .use('/transaksi', transaksi)
     .use('/auth', user)
-    // .use('/transaksi_detail', transaksi_detail)
+    .use('/cart', cart)
+    .use('/address', address)
 module.exports = Routes
