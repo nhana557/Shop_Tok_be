@@ -1,3 +1,18 @@
+<div align="center">
+  <img src="./readme/logo.svg" />
+</div>
+<h3 align="center">Shop Id API</h3>
+<p align="center">
+  <a href="https://shoptokbe-production.up.railway.app/api/v1/products">View API Demo</a>
+  ·
+  <a href="https://github.com/nhana557/Shop_Tok_be/issues">Report Bug</a>
+</p>
+
+<!-- ABOUT THE PROJECT -->
+
+## About The Project
+
+This is a Restful API repository for Nibiru Chat. This Restful API is built using ExpressJS and PostgreSQL.
 # List third party module
 | Thrid Party | npm install |
 | ------ | ------ |
