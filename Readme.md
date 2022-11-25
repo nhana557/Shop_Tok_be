@@ -62,7 +62,7 @@ This is a Restful API repository for Shop Id. This Restful API is built using Ex
 
 - Run program with `npm run dev` for development and `npm run start` for production
 
-### ENV
+## ENV
 ```bash
 DB_USERNAME = 
 DB_HOST = 
