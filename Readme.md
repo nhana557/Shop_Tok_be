@@ -62,6 +62,24 @@ This is a Restful API repository for Shop Id. This Restful API is built using Ex
 
 - Run program with `npm run dev` for development and `npm run start` for production
 
+
+```bash
+DB_USERNAME = 
+DB_HOST = 
+DB_DATABASE = 
+DB_PASSWORD = 
+DB_PORT = 
+PORT = 5000
+SECRET_KEY_JWT =
+
+
+EMAIL_USER=
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+REDIRECT_URI=
+GMAIL_REFRESH_TOKEN=
+DRIVE_REFRESH_TOKEN=
+```
 ## Endpoint List
 
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://api.postman.com/collections/22695982-8c66b1f9-4d9b-4032-881b-a3863654e195?access_key=PMAT-01GJMKHP57X9THTTNKXWJB4MP3)
