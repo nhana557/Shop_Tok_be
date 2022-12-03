@@ -79,7 +79,7 @@ const UserController = {
       res.send(
         `<div>
             <h1>Activation Success </h1>
-            <a href='${process.env.API_FRONTEND}/Login/worker'><button class="btn btn-primary">Login Hire Jobs</button></a> 
+            <a href='${process.env.API_FRONTEND}/Login'><button class="btn btn-primary">Login</button></a> 
           </div>`
       )
     } catch (error) {
