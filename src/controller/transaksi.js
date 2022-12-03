@@ -49,7 +49,7 @@ const transakasiController = {
         paymen
       }
       transaksiModel.insert(data)
-      .then(result => commonHelper.response(res, data, 200, "succes"))
+      .then(() => commonHelper.response(res, data, 200, "succes"))
       .catch(err => res.send(err));
     },
     update: (req, res) =>{
