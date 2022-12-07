@@ -93,7 +93,6 @@ const productController = {
       id_toko,
       photo: urls.map((url) => `https://drive.google.com/thumbnail?id=${url.id}&sz=s1080`)
     }
-    `https://drive.google.com/thumbnail?id=1iwlpEXg7nik2lXyHA_Oq95JEAu-q98cI&sz=s1080`
     
     insert(data)
       .then(
