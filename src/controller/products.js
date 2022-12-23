@@ -1,6 +1,6 @@
 const createError = require('http-errors')
 const { v4 : uuid4 } = require('uuid')
-const {selectAll, select, countData, findId, insert, update, deleteData, searching} = require('../models/products')
+const {selectAll, select, countData, findId, insert, update, deleteData, searching, selectProduct} = require('../models/products')
 const commonHelper = require('../helper/common')
 const client = require('../config/redis')
 const { uploadGoogleDrive, uploadGoogleDriveProduct } = require('../utils/uploadGoogleDrive')
@@ -59,6 +59,18 @@ const productController = {
   getProduct: (req, res) => {
     const id = req.params.id
     select(id)
+      .then(
+        result => {
+        client.setEx(`product/${id}`, 60 * 60,JSON.stringify(result.rows))
+        commonHelper.response(res, result.rows, 200, "get data success from database")
+        }
+      )
+      .catch(err => res.send(err)
+      )
+  },
+  getProductById: (req, res) => {
+    const id = req.params.id
+    selectProduct(id)
       .then(
         result => {
         client.setEx(`product/${id}`, 60 * 60,JSON.stringify(result.rows))

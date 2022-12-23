@@ -12,6 +12,11 @@ const select = (id) => {
   product.merk, product.photo, product.condition, category.name AS categori, toko.name AS toko FROM product LEFT JOIN category on product.id_category = category.id 
   LEFT JOIN toko ON product.id_toko = toko.id WHERE product.id=$1`,[id])
 }
+const selectProduct = (id) => {
+  return Pool.query(`SELECT product.id, product.name , product.price, product.stock, product.description,
+  product.merk, product.photo, product.condition, category.name AS categori, toko.name AS toko FROM product LEFT JOIN category on product.id_category = category.id 
+  LEFT JOIN toko ON product.id_toko = toko.id WHERE id_toko=$1`,[id])
+}
 
 const insert = (data) => {
   const { id, name, stock, price, id_category, merk, id_toko, photo, description, condition } = data
@@ -52,5 +57,5 @@ module.exports = {
   deleteData,
   countData,
   findId,
-  // searching
+  selectProduct
 }

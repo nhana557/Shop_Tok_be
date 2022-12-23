@@ -1,18 +1,16 @@
 const path = require('path');
 const multer = require('multer');
 const crypto = require('crypto');
-// const { failed } = require('../utils/createResponse');
 
-// management file
 const multerUpload = multer({
   storage: multer.diskStorage({
-    // destination: (req, file, cb) => {
-    //   if (file.fieldname === 'image') {
-    //     cb(null, './images');
-    //   } else {
-    //     cb(null, './public/video');
-    //   }
-    // },
+      // destination: (req, file, cb) => {
+      //   if (file.fieldname === 'image') {
+      //     cb(null, './images');
+      //   } else {
+      //     cb(null, './public/video');
+      //   }
+      // },
     filename: (req, file, cb) => {
       const name = crypto.randomBytes(30).toString('hex');
       const ext = path.extname(file.originalname);
