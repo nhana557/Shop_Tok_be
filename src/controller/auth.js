@@ -21,8 +21,8 @@ const UserController = {
       const salt = bcrypt.genSaltSync(10)
       const passwordHash = bcrypt.hashSync(password, salt);
       const id = uuidv4()
-      // const token = crypto.randomBytes(30).toString('hex')
-      const token = true
+      const token = crypto.randomBytes(30).toString('hex')
+      // const token = true
 
       if (rowCount) {
         return next(createError(403, "Email is already used"))
@@ -51,8 +51,8 @@ const UserController = {
 
       await create(data)
       sendEmail({ email, fullname, token })
-      commonHelper.response(res, null, 201, "Success register", null)
-      // commonHelper.response(res, null, 201, "Success register please check Email to activate account", null)
+      // commonHelper.response(res, null, 201, "Success register", null)
+      commonHelper.response(res, null, 201, "Success register please check Email to activate account", null)
 
     } catch (error) {
       console.log(error);
