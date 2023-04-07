@@ -1,16 +1,16 @@
-const path = require('path');
-const multer = require('multer');
-const crypto = require('crypto');
+import path from 'path';
+import multer from 'multer';
+import crypto from 'crypto';
 
 const multerUpload = multer({
   storage: multer.diskStorage({
-      // destination: (req, file, cb) => {
-      //   if (file.fieldname === 'image') {
-      //     cb(null, './images');
-      //   } else {
-      //     cb(null, './public/video');
-      //   }
-      // },
+    // destination: (req, file, cb) => {
+    //   if (file.fieldname === 'image') {
+    //     cb(null, './images');
+    //   } else {
+    //     cb(null, './public/video');
+    //   }
+    // },
     filename: (req, file, cb) => {
       const name = crypto.randomBytes(30).toString('hex');
       const ext = path.extname(file.originalname);
@@ -38,7 +38,7 @@ const multerUpload = multer({
 });
 
 // middleware
-module.exports = (req, res, next) => {
+export default (req, res, next) => {
   const multerFields = multerUpload.fields([
     {
       name: 'image',
@@ -47,7 +47,7 @@ module.exports = (req, res, next) => {
   ]);
   multerFields(req, res, (err) => {
     if (err) {
-        console.log(err)
+      console.log(err)
       let errorMessage = err.message;
       if (err.code === 'LIMIT_FILE_SIZE') {
         errorMessage = `File ${err.field} too large, max 50mb`;

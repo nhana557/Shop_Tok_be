@@ -1,5 +1,5 @@
 const text = (token) => {
-    return ` <!doctype html>
+  return ` <!doctype html>
   <html>
     <head>
       <meta name="viewport" content="width=device-width">
@@ -158,7 +158,6 @@ const text = (token) => {
       </table>
     </body>
   </html>`
-  }
-  
-  module.exports = text
-  
+}
+
+export default text

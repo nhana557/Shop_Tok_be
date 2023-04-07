@@ -1,12 +1,11 @@
-require('dotenv').config()
-const nodemailer = require('nodemailer')
-// const jwt = require('jsonwebtoken')
-const { google } = require("googleapis");
-const text = require('./templateEmail');
-const sendEmail = async ({email, fullname, token}) =>{
+import nodemailer from 'nodemailer'
+// import jwt from('jsonwebtoken')
+import { google } from "googleapis";
+import text from './templateEmail.js';
+
+const sendEmail = async ({ email, fullname, token }) => {
     try {
         // const accessToken = await oAuth2Client.getAccessToken();/
-        
         const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
@@ -19,12 +18,13 @@ const sendEmail = async ({email, fullname, token}) =>{
             to: email,
             subject: `Hello ✔ ${fullname}`,
             html: text(token)
-          })
+        })
         console.log(info)
 
     } catch (error) {
         console.log(error)
-    }   
+        throw new Error(error)
+    }
 }
 
-module.exports = sendEmail;
+export default sendEmail;

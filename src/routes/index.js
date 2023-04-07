@@ -1,15 +1,15 @@
-const express = require('express')
+import express from 'express';
+
+import products from './v1/products.routes.js';
+import category from './v1/category.routes.js';
+import payment from './v1/payment.routes.js';
+import toko from './v1/toko.routes.js';
+import transaksi from './v1/transaksi.routes.js';
+import cart from './v1/cart.routes.js';
+import user from './v1/auth.routes.js';
+import address from './v1/address.routes.js';
+
 const Routes = express.Router()
-
-const products = require('./products')
-const category = require('./category')
-const payment = require('./payment')
-const toko = require('./toko')
-const transaksi = require('./transaksi')
-const cart = require('./cart')
-const user = require('./auth')
-const address = require('./address.route')
-
 
 Routes
     .use('/products', products)
@@ -20,4 +20,5 @@ Routes
     .use('/auth', user)
     .use('/cart', cart)
     .use('/address', address)
-module.exports = Routes
+
+export default Routes;

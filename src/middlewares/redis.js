@@ -1,21 +1,21 @@
-const client = require('../config/redis')
-const { response } = require('../helper/common')
+// const client = require('../config/redis')
+// const { response } = require('../helper/common')
 
 
-const cacheProduct = async(req,res,next)=>{
-    const idProduct = req.params.id
-    const product = await client.get(`product/${idProduct}`)
-    if(product){
-        return response(res, JSON.parse(product) ,200,'get data success from redis')
-    }
-    next()
-}
+// const cacheProduct = async(req,res,next)=>{
+//     const idProduct = req.params.id
+//     const product = await client.get(`product/${idProduct}`)
+//     if(product){
+//         return response(res, JSON.parse(product) ,200,'get data success from redis')
+//     }
+//     next()
+// }
 
 
-const clearCacheProductDetail = (req,res,next) =>{
-    const idProduct = req.params.id
-    client.del(`product/${idProduct}`)
-    next()
-}
+// const clearCacheProductDetail = (req,res,next) =>{
+//     const idProduct = req.params.id
+//     client.del(`product/${idProduct}`)
+//     next()
+// }
 
-module.exports = {cacheProduct, clearCacheProductDetail}
+// module.exports = {cacheProduct, clearCacheProductDetail}

@@ -1,6 +1,4 @@
-require('dotenv').config()
-
-const { google } = require("googleapis")
+import { google } from "googleapis";
 
 const oAuth2Client = new google.auth.OAuth2(
     process.env.GOOGLE_CLIENT_ID,
@@ -12,7 +10,7 @@ oAuth2Client.setCredentials({
     refresh_token: process.env.DRIVE_REFRESH_TOKEN
 })
 
-const deleteDrive = async (id) =>{
+const deleteDrive = async (id) => {
     try {
         const drive = google.drive({
             version: 'v3',
@@ -28,4 +26,4 @@ const deleteDrive = async (id) =>{
     }
 }
 
-module.exports = deleteDrive;
+export default deleteDrive;

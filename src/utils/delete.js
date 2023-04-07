@@ -1,7 +1,7 @@
-const fs = require('fs')
+import fs from 'fs'
 
-module.exports = (path) =>{
-    if(fs.existsSync(path)){
+export default (path) => {
+    if (fs.existsSync(path)) {
         fs.unlinkSync(path)
     }
 }

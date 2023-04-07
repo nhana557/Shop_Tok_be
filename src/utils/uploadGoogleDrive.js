@@ -1,7 +1,5 @@
-require('dotenv').config()
-
-const { google } = require('googleapis')
-const fs = require('fs')
+import { google } from 'googleapis'
+import fs from 'fs'
 
 const oAuth2Client = new google.auth.OAuth2(
     process.env.GOOGLE_CLIENT_ID,
@@ -13,7 +11,7 @@ oAuth2Client.setCredentials({
     refresh_token: process.env.DRIVE_REFRESH_TOKEN
 })
 
-const uploadGoogleDrive = async(file) =>{
+export const uploadGoogleDrive = async (file) => {
     try {
         const drive = google.drive({
             version: "v3",
@@ -55,7 +53,7 @@ const uploadGoogleDrive = async(file) =>{
     }
 };
 
-const uploadGoogleDriveProduct = async(file) =>{
+export const uploadGoogleDriveProduct = async (file) => {
     try {
         const drive = google.drive({
             version: "v3",
@@ -97,5 +95,3 @@ const uploadGoogleDriveProduct = async(file) =>{
         console.log(error)
     }
 }
-
-module.exports = { uploadGoogleDrive, uploadGoogleDriveProduct };

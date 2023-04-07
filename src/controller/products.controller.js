@@ -1,29 +1,38 @@
-const createError = require('http-errors')
-const { v4 : uuid4 } = require('uuid')
-const {selectAll, select, countData, findId, insert, update, deleteData, searching, selectProduct} = require('../models/products')
-const commonHelper = require('../helper/common')
-const client = require('../config/redis')
-const { uploadGoogleDrive, uploadGoogleDriveProduct } = require('../utils/uploadGoogleDrive')
-const deleteFile = require("../utils/delete")
-const deleteDrive = require('../utils/deleteDrive')
+import createError from 'http-errors'
+import { v4 as uuid4 } from 'uuid'
+import {
+  selectAll,
+  select,
+  countData,
+  findId,
+  insert,
+  update,
+  deleteData,
+  selectProduct
+} from '../models/products.js'
+import response from '../helper/common.js'
+// import client from'../config/redis')
+import { uploadGoogleDrive, uploadGoogleDriveProduct } from '../utils/uploadGoogleDrive.js'
+import deleteFile from "../utils/delete.js"
+import deleteDrive from '../utils/deleteDrive.js'
 
 
 const productController = {
-  getAllProduct: async(req, res) => {
-    try{
+  getAllProduct: async (req, res) => {
+    try {
       const page = Number(req.query.page) || 1
       const limit = Number(req.query.limit) || 8;
       const offset = (page - 1) * limit
       const sortby = req.query.sortby || 'name'
       const sort = req.query.sort || "ASC"
-      const {rows: [count]} = await countData()
+      const { rows: [count] } = await countData()
       const search = req.query.search;
       let querySearch;
       if (search) {
-          querySearch =  `LEFT JOIN category on product.id_category = category.id 
+        querySearch = `LEFT JOIN category on product.id_category = category.id 
           LEFT JOIN toko ON product.id_toko = toko.id
-          where product.name ILIKE '%${search}%'` ;
-      }else if(search === undefined || search === '') {
+          where product.name ILIKE '%${search}%'`;
+      } else if (search === undefined || search === '') {
         querySearch = `LEFT JOIN category on product.id_category = category.id 
         LEFT JOIN toko ON product.id_toko = toko.id`
       }
@@ -35,18 +44,19 @@ const productController = {
         sort,
         sortby,
         querySearch
-      
+
       })
       const totalData = parseInt(count.count)
-      const totalPage = Math.ceil(totalData/limit)
-      const pagination ={     
-            currentPage : page,
-            limit:limit,
-            totalData:totalData,
-            totalPage:totalPage
-          }
-          commonHelper.response(res, result.rows, 200, "get data success", pagination)
-    }catch(error){
+      const totalPage = Math.ceil(totalData / limit)
+      const pagination = {
+        currentPage: page,
+        limit: limit,
+        totalData: totalData,
+        totalPage: totalPage
+      }
+      response(res, result.rows, 200, "get data success", pagination)
+    } catch (error) {
+      res.status(500).json(error)
       console.log(error);
     }
   },
@@ -61,8 +71,8 @@ const productController = {
     select(id)
       .then(
         result => {
-        client.setEx(`product/${id}`, 60 * 60,JSON.stringify(result.rows))
-        commonHelper.response(res, result.rows, 200, "get data success from database")
+          // client.setEx(`product/${id}`, 60 * 60, JSON.stringify(result.rows))
+          response(res, result.rows, 200, "get data success from database")
         }
       )
       .catch(err => res.send(err)
@@ -73,18 +83,18 @@ const productController = {
     selectProduct(id)
       .then(
         result => {
-        client.setEx(`product/${id}`, 60 * 60,JSON.stringify(result.rows))
-        commonHelper.response(res, result.rows, 200, "get data success from database")
+          // client.setEx(`product/${id}`, 60 * 60, JSON.stringify(result.rows))
+          response(res, result.rows, 200, "get data success from database")
         }
       )
       .catch(err => res.send(err)
       )
   },
-  insertProduct: async(req, res) => {
+  insertProduct: async (req, res) => {
     const urls = [];
     const files = req.files.image
     console.log(files)
-    for(let file of files){
+    for (let file of files) {
       const result = await uploadGoogleDriveProduct(file)
       console.log(result)
       await deleteFile(file.path)
@@ -93,7 +103,7 @@ const productController = {
     const { name, stock, price, merk, description, id_category, id_toko, condition } = req.body;
     const id = uuid4()
 
-    const data ={
+    const data = {
       id,
       name,
       description,
@@ -105,10 +115,10 @@ const productController = {
       id_toko,
       photo: urls.map((url) => `https://drive.google.com/thumbnail?id=${url.id}&sz=s1080`)
     }
-    
+
     insert(data)
       .then(
-        result => commonHelper.response(res, data, 201, "Product created")
+        result => response(res, data, 201, "Product created")
       )
       .catch(err => {
         console.log(err)
@@ -116,8 +126,8 @@ const productController = {
       }
       )
   },
-  updateProduct: async(req, res) => {
-    try{
+  updateProduct: async (req, res) => {
+    try {
       const id = req.params.id
       console.log(id)
       const { rowCount, rows } = await findId(id)
@@ -126,12 +136,12 @@ const productController = {
       const urls = [];
       const files = req.files.image
       let img;
-      if(!rowCount){
-        return next(createError(403,"ID is Not Found"))
+      if (!rowCount) {
+        return next(createError(403, "ID is Not Found"))
       }
-      if(files){
-        if(rows.photo){
-          for(let img of rows.photo){
+      if (files) {
+        if (rows.photo) {
+          for (let img of rows.photo) {
             let id_drive = img.split('id=')[1].split('&sz')[0]
             console.log("ini photo", img)
             await deleteDrive(id_drive)
@@ -140,15 +150,15 @@ const productController = {
             // await deleteDrive(id_drive)
           }
         }
-        for(let file of files){
-          img = await  uploadGoogleDrive(file)
+        for (let file of files) {
+          img = await uploadGoogleDrive(file)
           console.log(file)
           await deleteFile(file.path)
           urls.push(img)
         }
       }
       console.log(urls)
-      const data ={
+      const data = {
         id,
         name,
         description,
@@ -157,45 +167,46 @@ const productController = {
         merk,
         id_category,
         id_toko,
-        photo: urls.map(url => `https://drive.google.com/thumbnail?id=${url.id}&sz=s1080` ) 
+        photo: urls.map(url => `https://drive.google.com/thumbnail?id=${url.id}&sz=s1080`)
       }
       update(data)
         .then(
-          result => commonHelper.response(res, data, 200, "Product updated")
-          )
-          .catch(err => res.send(err)
-          )
-        }catch(error){
-          console.log(error);
-        }
+          result => response(res, data, 200, "Product updated")
+        )
+        .catch(err => res.send(err)
+        )
+    } catch (error) {
+      console.log(error);
+    }
   },
-  deleteProduct: async(req, res, next) => {
-    try{
+  deleteProduct: async (req, res, next) => {
+    try {
       const id = req.params.id;
-      const {rowCount, rows} = await findId(id)
-      if(!rowCount){
-        return next(createError(403,"ID is Not Found"))
+      const { rowCount, rows } = await findId(id)
+      if (!rowCount) {
+        return next(createError(403, "ID is Not Found"))
       }
       console.log(rows)
       // if(rows){
       //   if(rows.photo){
       //   }
       // }
-      for(let img of rows[0].photo){
+      for (let img of rows[0].photo) {
         let link_drive = img.split('id=')[1].split("&sz")[0]
         console.log(link_drive)
         await deleteDrive(link_drive)
       }
       deleteData(id)
         .then(
-          result => commonHelper.response(res, result.rows, 200, "Product deleted")
+          result => response(res, result.rows, 200, "Product deleted")
         )
         .catch(err => res.send(err)
         )
-    }catch(error){
-        console.log(error);
+    } catch (error) {
+      console.log(error);
+      res.status(500).json(error)
     }
   }
 }
 
-module.exports = productController
+export default productController

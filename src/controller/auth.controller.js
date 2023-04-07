@@ -1,17 +1,23 @@
-require("dotenv").config();
-const { v4: uuidv4 } = require('uuid');
-const bcrypt = require('bcryptjs');
-const createError = require('http-errors')
-const jwt = require('jsonwebtoken')
-const crypto = require('crypto')
-const { findEmail, create, selectAllUsers, activateEmail, findByToken, updateImgProfile } = require('../models/users')
-const commonHelper = require('../helper/common');
-const authHelper = require('../helper/auth');
-const sendEmail = require('../utils/email/sendEmail');
-const modelStore = require("../models/store")
-const deleteFile = require('../utils/delete')
-const { uploadGoogleDrive } = require("../utils/uploadGoogleDrive")
-const deleteDrive = require("../utils/deleteDrive")
+import { v4 as uuidv4 } from 'uuid';
+import bcrypt from 'bcryptjs';
+import createError from 'http-errors'
+import jwt from 'jsonwebtoken'
+import crypto from 'crypto'
+import {
+  findEmail,
+  create,
+  selectAllUsers,
+  activateEmail,
+  findByToken,
+  updateImgProfile
+} from '../models/users.js'
+import commonHelper from '../helper/common.js';
+import authHelper from '../helper/auth.js';
+import sendEmail from '../utils/email/sendEmail.js'
+import modelStore from "../models/store.js"
+import deleteFile from '../utils/delete.js'
+import { uploadGoogleDrive } from "../utils/uploadGoogleDrive.js"
+import deleteDrive from "../utils/deleteDrive.js"
 
 const UserController = {
   register: async (req, res, next) => {
@@ -35,9 +41,9 @@ const UserController = {
         role: role || 'buyer',
         verify: token,
       }
-      if(data.role === 'seller'){
+      if (data.role === 'seller') {
         console.log('test')
-        const dataStore ={
+        const dataStore = {
           id: uuidv4(),
           name: StoreName,
           email,
@@ -51,11 +57,11 @@ const UserController = {
 
       await create(data)
       sendEmail({ email, fullname, token })
-      // commonHelper.response(res, null, 201, "Success register", null)
-      commonHelper.response(res, null, 201, "Success register please check Email to activate account", null)
+      // commonHelper(res, null, 201, "Success register", null)
+      commonHelper(res, null, 201, "Success register please check Email to activate account", null)
 
     } catch (error) {
-      console.log(error);
+      res.status(500).json(error)
     }
   },
 
@@ -84,7 +90,7 @@ const UserController = {
           </div>`
       )
     } catch (error) {
-      console.log(error)
+      res.status(500).json(error)
     }
   },
 
@@ -93,13 +99,13 @@ const UserController = {
       const { email, password } = req.body
       const { rows: [user] } = await findEmail(email)
       if (!user) {
-        return commonHelper.response(res, null, 403, 'Email is invalid')
+        return commonHelper(res, null, 403, 'Email is invalid')
       } else if (user.verify === 'true') {
         const isValidPassword = bcrypt.compareSync(password, user.password)
         console.log(isValidPassword);
 
         if (!isValidPassword) {
-          return commonHelper.response(res, null, 403, 'Password is invalid')
+          return commonHelper(res, null, 403, 'Password is invalid')
         }
         delete user.password
         const payload = {
@@ -110,19 +116,19 @@ const UserController = {
         user.token = authHelper.generateToken(payload)
         user.refreshToken = authHelper.generateRefreshToken(payload)
 
-        commonHelper.response(res, user, 201, 'login is success')
+        commonHelper(res, user, 201, 'login is success')
       }
-      if(user.verify !== 'true') return commonHelper.response(res, null, 403, 'please activation Account!')
+      if (user.verify !== 'true') return commonHelper(res, null, 403, 'please activation Account!')
 
     } catch (error) {
-      console.log(error);
+      res.status(500).json(error)
     }
   },
 
   selectAll: (req, res, next) => {
     selectAllUsers()
       .then(result =>
-        commonHelper.response(res, result.rows, 200, "get data success"))
+        commonHelper(res, result.rows, 200, "get data success"))
       .catch(err => res.send(err))
   },
 
@@ -130,7 +136,7 @@ const UserController = {
     const email = req.decoded.email
     const { rows: [user] } = await findEmail(email)
     delete user.password
-    commonHelper.response(res, user, 200)
+    commonHelper(res, user, 200)
   },
 
   refreshToken: (req, res, next) => {
@@ -144,27 +150,23 @@ const UserController = {
       token: authHelper.generateToken(payload),
       refreshToken: authHelper.generateRefreshToken(payload)
     }
-    console.log(result)
-    commonHelper.response(res, result, 200, "RefreshToken success", null)
+    commonHelper(res, result, 200, "RefreshToken success", null)
   },
   updatePhotoProfile: async (req, res, next) => {
     try {
       const email = req.decoded.email;
       const id = req.decoded.id
-      console.log(id)
-      const {phonenumber, gender, fullname} = req.body
+      const { phonenumber, gender, fullname } = req.body
       const user = await findEmail(email)
-      console.log(!user.rowCount)
       if (!user.rowCount) {
         if (req.files) {
           deleteFile(req.files.image[0].path)
         }
-        commonHelper.response(res, null, 404, "Update profile failed")
+        commonHelper(res, null, 404, "Update profile failed")
         return;
       }
 
       let { image } = user.rows[0];
-      console.log(image)
 
       if (req.files) {
         if (req.files.image) {
@@ -178,21 +180,20 @@ const UserController = {
           deleteFile(req.files.image[0].path)
         }
       }
-      console.log("ini image", image)
       const data = {
-        id, 
+        id,
         fullname,
         phonenumber,
         gender,
         image: image.id ? `https://drive.google.com/uc?export=view&id=${image.id}` : null
       }
       await updateImgProfile(data)
-      commonHelper.response(res, null, 200, "updated Photo")
+      commonHelper(res, null, 200, "updated Photo")
     } catch (error) {
       console.log(error)
+      res.status(500).json(error)
     }
   }
 }
 
-
-module.exports = UserController
+export default UserController

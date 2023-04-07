@@ -1,8 +1,8 @@
-const express = require('express')
-const router = express.Router()
-const categoryController = require('../controller/category')
-const {protect, roles} = require('../middlewares/auth')
+import express from 'express';
+import categoryController from '../../controller/category.controller.js'
+// import { protect, roles } from '../../middlewares/auth.js'
 
+const router = express.Router()
 
 router
   // .get('/cari', protect, roles, categoryController.searching)
@@ -13,4 +13,4 @@ router
   .put('/:id', categoryController.updateCategory)
   .delete('/:id', categoryController.deleteCategory)
 
-module.exports = router
+export default router

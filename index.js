@@ -1,14 +1,16 @@
-require('dotenv').config()
-const express = require('express')
-const createError = require('http-errors')
-const app = express()
-const helmet = require('helmet')
-const cors = require('cors')
-const morgan = require('morgan')
-const Router = require('./src/routes/index');
+import express from 'express'
+import createError from 'http-errors'
+import helmet from 'helmet'
+import cors from 'cors'
+import morgan from 'morgan'
+import Router from './src/routes/index.js';
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 
-app.use(express.urlencoded({extended: true}))
+const app = express();
+app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 app.use(cors({
   origin: "*"
@@ -16,21 +18,21 @@ app.use(cors({
 app.use(helmet())
 app.use(morgan('dev'))
 
-app.use('/api/v1', Router )
+app.use('/api/v1', Router)
 app.use('/img', express.static('./src/upload'))
 
 
 app.all('*', (req, res, next) => {
   next(new createError.NotFound())
 })
-app.use((err,req,res,next)=>{
+app.use((err, req, res, next) => {
   const messageError = err.message || "internal server error"
   const statusCode = err.status || 500
-  
+
   res.status(statusCode).json({
-    message : messageError
+    message: messageError
   })
-  
+
 })
 
 
