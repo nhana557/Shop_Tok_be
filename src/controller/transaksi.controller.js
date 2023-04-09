@@ -1,10 +1,10 @@
-import transaksiModel from "../models/transaksi.js"
-import { v4 as uuid4 } from 'uuid'
-import commonHelper from '../helper/common.js'
+import { v4 as uuid4 } from 'uuid';
+import commonHelper from '../helper/common.js';
+import transaksiModel from "../models/transaksi.js";
 
 
 const transakasiController = {
-  allTransaksi: async (req, res) => {
+  allTransaksi: async (req, res, next) => {
     try {
       const currentPage = Number(req.query.currentPage) || 1;
       const numberPerPage = Number(req.query.numberPerPage) || 5;
@@ -26,7 +26,7 @@ const transakasiController = {
         data: result.rows,
       });
     } catch (err) {
-      console.log(err);
+      next(err)
     }
   },
   getTransaksi: (req, res) => {

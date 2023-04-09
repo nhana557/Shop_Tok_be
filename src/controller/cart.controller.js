@@ -1,6 +1,6 @@
-import cartModel from "../models/cart.js";
 import { v4 as uuid4 } from "uuid";
 import response from '../helper/common.js';
+import cartModel from "../models/cart.js";
 
 const cartControllers = {
     allCart: (req, res, next) => {
@@ -15,17 +15,26 @@ const cartControllers = {
                 res.send(err)
             });
     },
-    insert: (req, res) => {
-        const { product_id, user_id } = req.body;
-        const data = {
-            id: uuid4(),
-            product_id,
-            user_id,
-            qty: 1
+    insert: async (req, res) => {
+        try {
+            const { product_id, user_id } = req.body;
+            const data = {
+                id: uuid4(),
+                product_id,
+                user_id,
+                qty: 1
+            }
+            const newCart = await cartModel.insert(data)
+            if (!newCart) {
+                res.status(403).json({
+                    msg: "add cart failed"
+                })
+            }
+            res.status(200).json(newCart)
+
+        } catch (error) {
+            res.status(500).json(error)
         }
-        cartModel.insert(data)
-            .then(res.json("add Bag"))
-            .catch(err => res.send(err));
     },
     add: async (req, res) => {
         try {

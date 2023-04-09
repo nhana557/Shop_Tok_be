@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid'
-import modelsAddress from '../models/address.js'
 import commonHelper from '../helper/common.js'
+import modelsAddress from '../models/address.js'
 
 
 const controllersAddress = {
@@ -17,7 +17,7 @@ const controllersAddress = {
             commonHelper(res, data, 200, 'success add address')
 
         } catch (error) {
-            console.log(error)
+            res.status(500).json(error)
         }
     },
     updateAddress: async (req, res, next) => {
@@ -32,7 +32,7 @@ const controllersAddress = {
             commonHelper(res, data, 200, 'success update address')
 
         } catch (error) {
-            console.log(error)
+            res.status(500).json(error)
         }
     },
     getAddressUser: async (req, res, next) => {

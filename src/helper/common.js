@@ -10,4 +10,4 @@ const response = (res, result, status, message, pagination) => {
     res.status(status).json(resultPrint)
 }
 
-export default response
+export default response;

@@ -1,20 +1,20 @@
 import createError from 'http-errors'
 import { v4 as uuid4 } from 'uuid'
+import response from '../helper/common.js'
 import {
-  selectAll,
-  select,
   countData,
+  deleteData,
   findId,
   insert,
-  update,
-  deleteData,
-  selectProduct
+  select,
+  selectAll,
+  selectProduct,
+  update
 } from '../models/products.js'
-import response from '../helper/common.js'
 // import client from'../config/redis')
-import { uploadGoogleDrive, uploadGoogleDriveProduct } from '../utils/uploadGoogleDrive.js'
 import deleteFile from "../utils/delete.js"
 import deleteDrive from '../utils/deleteDrive.js'
+import { uploadGoogleDrive, uploadGoogleDriveProduct } from '../utils/uploadGoogleDrive.js'
 
 
 const productController = {
@@ -126,7 +126,7 @@ const productController = {
       }
       )
   },
-  updateProduct: async (req, res) => {
+  updateProduct: async (req, res, next) => {
     try {
       const id = req.params.id
       console.log(id)
@@ -177,6 +177,7 @@ const productController = {
         )
     } catch (error) {
       console.log(error);
+      next(error)
     }
   },
   deleteProduct: async (req, res, next) => {
@@ -186,11 +187,6 @@ const productController = {
       if (!rowCount) {
         return next(createError(403, "ID is Not Found"))
       }
-      console.log(rows)
-      // if(rows){
-      //   if(rows.photo){
-      //   }
-      // }
       for (let img of rows[0].photo) {
         let link_drive = img.split('id=')[1].split("&sz")[0]
         console.log(link_drive)
@@ -204,7 +200,7 @@ const productController = {
         )
     } catch (error) {
       console.log(error);
-      res.status(500).json(error)
+      next(error)
     }
   }
 }

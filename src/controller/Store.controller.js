@@ -1,16 +1,19 @@
 import commonHelper from "../helper/common.js";
+import modelStore from "../models/store.js";
+import deleteDrive from "../utils/deleteDrive.js";
 import {
-    uploadGoogleDriveProduct,
     uploadGoogleDrive
 } from "../utils/uploadGoogleDrive.js";
-import deleteDrive from "../utils/deleteDrive.js";
-import modelStore from "../models/store.js";
 
 
 const storeController = {
     getStore: async (req, res, next) => {
-        const toko = await modelStore.getAll()
-        commonHelper(res, toko, 200, "success")
+        try {
+            const toko = await modelStore.getAll()
+            commonHelper(res, toko, 200, "success")
+        } catch (error) {
+            next(error)
+        }
     },
     getStoreById: async (req, res, next) => {
         try {
@@ -40,7 +43,6 @@ const storeController = {
                 }
                 filePhoto = await uploadGoogleDrive(photo)
             }
-            console.log(filePhoto)
             const data = {
                 id,
                 name,
@@ -49,11 +51,13 @@ const storeController = {
                 email: email ? email : toko.rows[0].email,
                 photo: filePhoto.id ? `https://drive.google.com/uc?export=view&id=${filePhoto.id}` : null
             }
-            await modelStore.update(data)
+            const updateStore = await modelStore.update(data)
+            if (!updateStore) {
+                res.status(403).json("update failed")
+            }
             commonHelper(res, data, 200, 'updated Toko')
         } catch (error) {
-            console.log(error)
-            res.status(500).json(error)
+            next(error)
         }
     }
 

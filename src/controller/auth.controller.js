@@ -1,23 +1,23 @@
-import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcryptjs';
-import createError from 'http-errors'
-import jwt from 'jsonwebtoken'
-import crypto from 'crypto'
-import {
-  findEmail,
-  create,
-  selectAllUsers,
-  activateEmail,
-  findByToken,
-  updateImgProfile
-} from '../models/users.js'
-import commonHelper from '../helper/common.js';
+import crypto from 'crypto';
+import createError from 'http-errors';
+import jwt from 'jsonwebtoken';
+import { v4 as uuidv4 } from 'uuid';
 import authHelper from '../helper/auth.js';
-import sendEmail from '../utils/email/sendEmail.js'
-import modelStore from "../models/store.js"
-import deleteFile from '../utils/delete.js'
-import { uploadGoogleDrive } from "../utils/uploadGoogleDrive.js"
-import deleteDrive from "../utils/deleteDrive.js"
+import commonHelper from '../helper/common.js';
+import modelStore from "../models/store.js";
+import {
+  activateEmail,
+  create,
+  findByToken,
+  findEmail,
+  selectAllUsers,
+  updateImgProfile
+} from '../models/users.js';
+import deleteFile from '../utils/delete.js';
+import deleteDrive from "../utils/deleteDrive.js";
+import sendEmail from '../utils/email/sendEmail.js';
+import { uploadGoogleDrive } from "../utils/uploadGoogleDrive.js";
 
 const UserController = {
   register: async (req, res, next) => {
@@ -42,7 +42,6 @@ const UserController = {
         verify: token,
       }
       if (data.role === 'seller') {
-        console.log('test')
         const dataStore = {
           id: uuidv4(),
           name: StoreName,
@@ -125,32 +124,40 @@ const UserController = {
     }
   },
 
-  selectAll: (req, res, next) => {
+  selectAll: (req, res,) => {
     selectAllUsers()
       .then(result =>
         commonHelper(res, result.rows, 200, "get data success"))
-      .catch(err => res.send(err))
+      .catch(err => res.status(500).json(err))
   },
 
-  profile: async (req, res, next) => {
-    const email = req.decoded.email
-    const { rows: [user] } = await findEmail(email)
-    delete user.password
-    commonHelper(res, user, 200)
+  profile: async (req, res) => {
+    try {
+      const email = req.decoded.email
+      const { rows: [user] } = await findEmail(email)
+      delete user.password
+      commonHelper(res, user, 200)
+    } catch (error) {
+      res.status(500).json(error)
+    }
   },
 
-  refreshToken: (req, res, next) => {
-    const refreshToken = req.body.refreshToken
-    const decoded = jwt.verify(refreshToken, process.env.SECRET_KEY_JWT)
-    const payload = {
-      email: decoded.email,
-      role: decoded.role
+  refreshToken: (req, res) => {
+    try {
+      const refreshToken = req.body.refreshToken
+      const decoded = jwt.verify(refreshToken, process.env.SECRET_KEY_JWT)
+      const payload = {
+        email: decoded.email,
+        role: decoded.role
+      }
+      const result = {
+        token: authHelper.generateToken(payload),
+        refreshToken: authHelper.generateRefreshToken(payload)
+      }
+      commonHelper(res, result, 200, "RefreshToken success", null)
+    } catch (error) {
+      res.status(500).json(error)
     }
-    const result = {
-      token: authHelper.generateToken(payload),
-      refreshToken: authHelper.generateRefreshToken(payload)
-    }
-    commonHelper(res, result, 200, "RefreshToken success", null)
   },
   updatePhotoProfile: async (req, res, next) => {
     try {

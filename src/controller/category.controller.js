@@ -1,15 +1,15 @@
 import createError from 'http-errors';
+import commonHelper from '../helper/common.js';
 import {
-  selectAll,
-  select,
+  AllCategory,
   countData,
+  deleteData,
   findId,
   insert,
-  update,
-  deleteData,
-  AllCategory
-} from '../models/category.js'
-import commonHelper from '../helper/common.js'
+  select,
+  selectAll,
+  update
+} from '../models/category.js';
 
 const categoryController = {
   getAllCategory: async (req, res, next) => {
@@ -105,14 +105,15 @@ const categoryController = {
       if (!rowCount) {
         return next(createError(403, "ID is Not Found"))
       }
-      deleteData(id)
-        .then(
-          result => commonHelper(res, result.rows, 200, "Category deleted")
-        )
-        .catch(err => res.send(err)
-        )
+      const deleteCategory = await deleteData(id)
+      if (!deleteCategory) {
+        res.status(403).json({
+          msg: "failed delete category"
+        })
+      }
+      commonHelper(res, result.rows, 200, "Category deleted")
     } catch (error) {
-      console.log(error);
+      res.status(500).json(error)
     }
   }
 }
