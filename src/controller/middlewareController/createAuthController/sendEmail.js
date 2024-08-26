@@ -1,11 +1,8 @@
 import nodemailer from 'nodemailer';
-// import jwt from('jsonwebtoken')
-import { google } from 'googleapis';
-import text from './templateEmail.js';
+import text from '../../../utils/email/templateEmail.js';
 
 const sendEmail = async ({ email, fullname, token }) => {
 	try {
-		// const accessToken = await oAuth2Client.getAccessToken();/
 		const transporter = nodemailer.createTransport({
 			service: 'gmail',
 			auth: {
@@ -14,7 +11,7 @@ const sendEmail = async ({ email, fullname, token }) => {
 			},
 		});
 		const info = await transporter.sendMail({
-			from: `"Belanjain Aja" <hatakekakasih2002@gmail.com>`,
+			from: `"Belanjain Aja" <taryana2525@gmail.com>`,
 			to: email,
 			subject: `Hello ✔ ${fullname}`,
 			html: text(token),

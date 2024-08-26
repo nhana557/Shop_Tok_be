@@ -1,41 +1,52 @@
 {
-  "name": "express",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "type": "module",
-  "engines": {
-    "node": "16.x"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "nodemon index.js",
-    "start": "node index.js",
-    "dev": "nodemon index.js",
-    "lint": "eslint --fix --ext .js, .jsx ."
-  },
-  "author": "nana",
-  "license": "ISC",
-  "dependencies": {
-    "bcryptjs": "^2.4.3",
-    "cors": "^2.8.5",
-    "crypto": "^1.0.1",
-    "dotenv": "^16.0.1",
-    "express": "^4.18.1",
-    "googleapis": "^109.0.1",
-    "helmet": "^5.1.1",
-    "http-errors": "^2.0.0",
-    "jsonwebtoken": "^8.5.1",
-    "multer": "^1.4.5-lts.1",
-    "nodemailer": "^6.8.0",
-    "pg": "^8.7.3",
-    "redis": "^4.2.0",
-    "uuid": "^8.3.2",
-    "xss-clean": "^0.1.1"
-  },
-  "devDependencies": {
-    "eslint": "^8.21.0",
-    "morgan": "^1.10.0",
-    "nodemon": "^2.0.19"
-  }
+	"name": "express",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"type": "module",
+	"engines": {
+		"node": "18.x"
+	},
+	"_moduleAliases": {
+		"@": "src"
+	},
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"server": "nodemon index.js",
+		"start": "node index.js",
+		"dev": "nodemon index.js",
+		"migration-init": "db-migrate create initialize --sql-file",
+		"migration-up": "db-migrate up initialize",
+		"migration-down": "db-migrate down initialize",
+		"gm": "graphile-migrate",
+		"lint": "eslint --fix --ext .js, .jsx ."
+	},
+	"author": "Taryana",
+	"license": "ISC",
+	"dependencies": {
+		"bcrypt": "^5.1.1",
+		"bcryptjs": "^2.4.3",
+		"cookie-parser": "^1.4.6",
+		"cors": "^2.8.5",
+		"crypto": "^1.0.1",
+		"dotenv": "^16.0.1",
+		"express": "^4.18.1",
+		"googleapis": "^109.0.1",
+		"graphile-migrate": "^1.4.1",
+		"helmet": "^5.1.1",
+		"http-errors": "^2.0.0",
+		"joi": "^17.13.1",
+		"jsonwebtoken": "^9.0.2",
+		"multer": "^1.4.5-lts.1",
+		"nodemailer": "^6.8.0",
+		"pg": "^8.7.3",
+		"redis": "^4.2.0",
+		"uuid": "^8.3.2",
+		"xss-clean": "^0.1.1"
+	},
+	"devDependencies": {
+		"eslint": "^8.21.0",
+		"morgan": "^1.10.0",
+		"nodemon": "^3.1.0"
+	}
 }
