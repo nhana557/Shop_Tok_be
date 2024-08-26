@@ -82,8 +82,6 @@ GMAIL_REFRESH_TOKEN=
 DRIVE_REFRESH_TOKEN=
 ```
 
-## Endpoint List
-
 <!-- RELATED PROJECT -->
 
 ## Related Project
