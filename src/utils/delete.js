@@ -1,7 +1,7 @@
-import fs from 'fs'
+import fs from 'fs';
 
 export default (path) => {
-    if (fs.existsSync(path)) {
-        fs.unlinkSync(path)
-    }
-}
+	if (fs.existsSync(path)) {
+		fs.unlinkSync(path);
+	}
+};

@@ -1,7 +1,6 @@
 // const client = require('../config/redis')
 // const { response } = require('../helper/common')
 
-
 // const cacheProduct = async(req,res,next)=>{
 //     const idProduct = req.params.id
 //     const product = await client.get(`product/${idProduct}`)
@@ -10,7 +9,6 @@
 //     }
 //     next()
 // }
-
 
 // const clearCacheProductDetail = (req,res,next) =>{
 //     const idProduct = req.params.id

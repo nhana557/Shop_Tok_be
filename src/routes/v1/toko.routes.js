@@ -6,8 +6,8 @@ import upload from '../../middlewares/upload.js';
 const router = express.Router();
 
 router
-    .get('/', storeController.getStore)
-    .get('/:id', storeController.getStoreById)
-    .put('/update/:id', upload, storeController.updateStore)
+	.get('/', storeController.getStore)
+	.get('/:id', storeController.getStoreById)
+	.put('/update/:id', upload, storeController.updateStore);
 
 export default router;
